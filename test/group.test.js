@@ -4,18 +4,14 @@ import { groupByLabel, mergeLabels, normalizeLabel } from "../src/group.js";
 
 describe("groupByLabel", () => {
   it("should group feat commits into Features", () => {
-    const commits = [
-      { labels: ["feat"], description: "add login", breakingChange: false },
-    ];
+    const commits = [{ labels: ["feat"], description: "add login", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("🚀 Features"));
     assert.equal(groups.get("🚀 Features").length, 1);
   });
 
   it("should group fix commits into Bug Fixes", () => {
-    const commits = [
-      { labels: ["fix"], description: "fix crash", breakingChange: false },
-    ];
+    const commits = [{ labels: ["fix"], description: "fix crash", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("🐛 Bug Fixes"));
   });
@@ -34,7 +30,12 @@ describe("groupByLabel", () => {
 
   it("should prioritize breaking changes into Breaking Changes group", () => {
     const commits = [
-      { labels: ["feat"], description: "new api", breakingChange: true, breakingChangeDescription: "old api removed" },
+      {
+        labels: ["feat"],
+        description: "new api",
+        breakingChange: true,
+        breakingChangeDescription: "old api removed",
+      },
     ];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("💥 Breaking Changes"));
@@ -43,17 +44,13 @@ describe("groupByLabel", () => {
   });
 
   it("should handle empty labels as Uncategorized", () => {
-    const commits = [
-      { labels: [], description: "random change", breakingChange: false },
-    ];
+    const commits = [{ labels: [], description: "random change", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("📦 Uncategorized"));
   });
 
   it("should handle null labels as Uncategorized", () => {
-    const commits = [
-      { labels: null, description: "random", breakingChange: false },
-    ];
+    const commits = [{ labels: null, description: "random", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("📦 Uncategorized"));
   });
@@ -64,26 +61,20 @@ describe("groupByLabel", () => {
   });
 
   it("should skip empty groups in output", () => {
-    const commits = [
-      { labels: ["feat"], description: "add feature", breakingChange: false },
-    ];
+    const commits = [{ labels: ["feat"], description: "add feature", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(!groups.has("🐛 Bug Fixes"));
     assert.ok(!groups.has("📦 Uncategorized"));
   });
 
   it("should resolve alias labels like kind/feature", () => {
-    const commits = [
-      { labels: ["kind/feature"], description: "new stuff", breakingChange: false },
-    ];
+    const commits = [{ labels: ["kind/feature"], description: "new stuff", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("🚀 Features"));
   });
 
   it("should resolve Chinese alias labels like 类型/新功能", () => {
-    const commits = [
-      { labels: ["类型/新功能"], description: "新东西", breakingChange: false },
-    ];
+    const commits = [{ labels: ["类型/新功能"], description: "新东西", breakingChange: false }];
     const groups = groupByLabel(commits);
     assert.ok(groups.has("🚀 Features"));
   });

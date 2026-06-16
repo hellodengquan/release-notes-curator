@@ -23,7 +23,20 @@ describe("CHINESE_PREFIX_MAP", () => {
   });
 
   it("should have all entries map to valid conventional types", () => {
-    const validTypes = new Set(["feat", "fix", "docs", "refactor", "perf", "test", "style", "build", "chore", "ci"]);
+    const validTypes = new Set([
+      "feat",
+      "fix",
+      "docs",
+      "refactor",
+      "perf",
+      "test",
+      "style",
+      "build",
+      "chore",
+      "ci",
+      "security",
+      "yanked",
+    ]);
     for (const [, type] of Object.entries(CHINESE_PREFIX_MAP)) {
       assert.ok(validTypes.has(type), `Unknown type: ${type}`);
     }

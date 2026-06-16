@@ -38,6 +38,15 @@ describe("LABEL_MAP", () => {
     assert.equal(LABEL_MAP["breaking change"], "💥 Breaking Changes");
   });
 
+  it("should contain security and yanked mappings", () => {
+    assert.equal(LABEL_MAP["security"], "🔒 Security");
+    assert.equal(LABEL_MAP["安全"], "🔒 Security");
+    assert.equal(LABEL_MAP["cve"], "🔒 Security");
+    assert.equal(LABEL_MAP["yanked"], "📌 Yanked");
+    assert.equal(LABEL_MAP["撤回"], "📌 Yanked");
+    assert.equal(LABEL_MAP["revert"], "📌 Yanked");
+  });
+
   it("should have all values be in LABEL_ORDER", () => {
     const categories = new Set(Object.values(LABEL_MAP));
     for (const cat of categories) {

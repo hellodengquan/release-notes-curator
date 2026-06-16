@@ -41,7 +41,10 @@ describe("generateMarkdown", () => {
 
   it("should highlight breaking changes with warning", () => {
     const groups = new Map([
-      ["💥 Breaking Changes", [makeCommit({ breakingChange: true, breakingChangeDescription: "old api removed" })]],
+      [
+        "💥 Breaking Changes",
+        [makeCommit({ breakingChange: true, breakingChangeDescription: "old api removed" })],
+      ],
     ]);
     const md = generateMarkdown(groups, {});
     assert.ok(md.includes("⚠️ **BREAKING**"));
@@ -57,9 +60,7 @@ describe("generateMarkdown", () => {
   });
 
   it("should include scope in bold", () => {
-    const groups = new Map([
-      ["🚀 Features", [makeCommit({ scope: "auth" })]],
-    ]);
+    const groups = new Map([["🚀 Features", [makeCommit({ scope: "auth" })]]]);
     const md = generateMarkdown(groups, {});
     assert.ok(md.includes("**auth**:"));
   });
@@ -85,7 +86,10 @@ describe("generateKeepAChangelog", () => {
 
   it("should map Breaking Changes to its own section", () => {
     const groups = new Map([
-      ["💥 Breaking Changes", [makeCommit({ breakingChange: true, breakingChangeDescription: "api changed" })]],
+      [
+        "💥 Breaking Changes",
+        [makeCommit({ breakingChange: true, breakingChangeDescription: "api changed" })],
+      ],
     ]);
     const md = generateKeepAChangelog(groups, {});
     assert.ok(md.includes("### Breaking Changes"));
@@ -121,35 +125,27 @@ describe("generateReleaseNotesYaml", () => {
   });
 
   it("should include breaking flag for breaking changes", () => {
-    const groups = new Map([
-      ["💥 Breaking Changes", [makeCommit({ breakingChange: true })]],
-    ]);
+    const groups = new Map([["💥 Breaking Changes", [makeCommit({ breakingChange: true })]]]);
     const yaml = generateReleaseNotesYaml(groups, {});
     assert.ok(yaml.includes("breaking: true"));
   });
 
   it("should include packages list when affected", () => {
-    const groups = new Map([
-      ["🚀 Features", [makeCommit({ affectedPackages: ["core"] })]],
-    ]);
+    const groups = new Map([["🚀 Features", [makeCommit({ affectedPackages: ["core"] })]]]);
     const yaml = generateReleaseNotesYaml(groups, {});
     assert.ok(yaml.includes("packages:"));
     assert.ok(yaml.includes('"core"'));
   });
 
   it("should include PR URL when repoUrl provided", () => {
-    const groups = new Map([
-      ["🚀 Features", [makeCommit({ prNumber: 10 })]],
-    ]);
+    const groups = new Map([["🚀 Features", [makeCommit({ prNumber: 10 })]]]);
     const yaml = generateReleaseNotesYaml(groups, { repoUrl: "https://github.com/org/repo" });
     assert.ok(yaml.includes("url:"));
     assert.ok(yaml.includes("/pull/10"));
   });
 
   it("should escape double quotes in YAML", () => {
-    const groups = new Map([
-      ["🚀 Features", [makeCommit({ description: 'fix "quotes" issue' })]],
-    ]);
+    const groups = new Map([["🚀 Features", [makeCommit({ description: 'fix "quotes" issue' })]]]);
     const yaml = generateReleaseNotesYaml(groups, {});
     assert.ok(yaml.includes('\\"quotes\\"'));
   });
@@ -165,9 +161,7 @@ describe("generatePlainText", () => {
   });
 
   it("should mark breaking changes with [BREAKING]", () => {
-    const groups = new Map([
-      ["💥 Breaking Changes", [makeCommit({ breakingChange: true })]],
-    ]);
+    const groups = new Map([["💥 Breaking Changes", [makeCommit({ breakingChange: true })]]]);
     const text = generatePlainText(groups, {});
     assert.ok(text.includes("[BREAKING]"));
   });

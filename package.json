@@ -1,5 +1,5 @@
 {
-  "name": "194-release-notes-curator",
+  "name": "@rnc/release-notes-curator",
   "version": "1.0.0",
   "description": "Release Notes Curator — 从 git commits 生成按标签分组的发版提案稿",
   "main": "bin/rnc.js",
@@ -12,22 +12,51 @@
     "lint": "eslint src/ bin/ test/",
     "lint:fix": "eslint src/ bin/ test/ --fix",
     "format": "prettier --write \"src/**/*.js\" \"bin/**/*.js\" \"test/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.js\" \"bin/**/*.js\" \"test/**/*.js\""
+    "format:check": "prettier --check \"src/**/*.js\" \"bin/**/*.js\" \"test/**/*.js\"",
+    "prepare": "husky || true",
+    "publish:npm": "npm publish --access public --registry https://registry.npmjs.org/",
+    "publish:github": "npm publish --access public --registry https://npm.pkg.github.com/",
+    "publish:enterprise": "npm publish --access restricted --registry ${NPM_ENTERPRISE_REGISTRY:-https://npm.pkg.github.com/}",
+    "publish:all": "npm run publish:npm && npm run publish:github",
+    "publish:all-with-enterprise": "npm run publish:npm && npm run publish:github && npm run publish:enterprise"
+  },
+  "lint-staged": {
+    "*.js": ["eslint --fix", "prettier --write"],
+    "*.{json,md}": ["prettier --write"]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "repository": {
     "type": "git",
     "url": "git@github-hellodengquan:hellodengquan/release-notes-curator.git"
   },
-  "keywords": ["release-notes", "cli", "changelog", "git"],
+  "keywords": ["release-notes", "cli", "changelog", "git", "monorepo", "conventional-commits"],
   "author": "",
   "license": "ISC",
   "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
   "dependencies": {
     "chalk": "^5.6.2",
     "commander": "^15.0.0"
   },
   "devDependencies": {
     "eslint": "^9.30.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
     "prettier": "^3.6.0"
   }
 }
