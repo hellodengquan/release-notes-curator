@@ -8,7 +8,11 @@
   },
   "scripts": {
     "start": "node bin/rnc.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test test/*.test.js",
+    "lint": "eslint src/ bin/ test/",
+    "lint:fix": "eslint src/ bin/ test/ --fix",
+    "format": "prettier --write \"src/**/*.js\" \"bin/**/*.js\" \"test/**/*.js\"",
+    "format:check": "prettier --check \"src/**/*.js\" \"bin/**/*.js\" \"test/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -21,5 +25,9 @@
   "dependencies": {
     "chalk": "^5.6.2",
     "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^9.30.0",
+    "prettier": "^3.6.0"
   }
 }

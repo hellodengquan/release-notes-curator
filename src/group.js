@@ -1,4 +1,4 @@
-import { LABEL_MAP, LABEL_ORDER, UNCATEGORIZED_LABEL } from "./config.js";
+import { LABEL_MAP, LABEL_ALIASES, LABEL_ORDER, UNCATEGORIZED_LABEL } from "./config.js";
 
 export function groupByLabel(commits) {
   const groups = new Map();
@@ -8,7 +8,13 @@ export function groupByLabel(commits) {
   }
 
   for (const commit of commits) {
-    const targetLabel = resolveCategory(commit.labels);
+    let targetLabel;
+
+    if (commit.breakingChange) {
+      targetLabel = "💥 Breaking Changes";
+    } else {
+      targetLabel = resolveCategory(commit.labels);
+    }
 
     if (!groups.has(targetLabel)) {
       groups.set(targetLabel, []);
@@ -37,6 +43,24 @@ function resolveCategory(labels) {
   }
 
   for (const label of labels) {
+    const alias = LABEL_ALIASES[label.toLowerCase().trim()] || LABEL_ALIASES[label.trim()];
+    if (alias && LABEL_MAP[alias]) {
+      return LABEL_MAP[alias];
+    }
+  }
+
+  for (const label of labels) {
+    const normalized = label.toLowerCase().trim();
+    for (const [aliasPattern, mappedKey] of Object.entries(LABEL_ALIASES)) {
+      if (normalized.includes(aliasPattern.toLowerCase()) || aliasPattern.toLowerCase().includes(normalized)) {
+        if (LABEL_MAP[mappedKey]) {
+          return LABEL_MAP[mappedKey];
+        }
+      }
+    }
+  }
+
+  for (const label of labels) {
     const normalized = label.toLowerCase().trim();
     for (const [key, category] of Object.entries(LABEL_MAP)) {
       if (normalized.includes(key) || key.includes(normalized)) {
@@ -51,4 +75,11 @@ function resolveCategory(labels) {
 export function mergeLabels(commitLabels, prLabels) {
   const all = new Set([...commitLabels, ...prLabels]);
   return [...all];
+}
+
+export function normalizeLabel(label) {
+  const trimmed = label.trim();
+  const alias = LABEL_ALIASES[trimmed] || LABEL_ALIASES[trimmed.toLowerCase()];
+  if (alias) return alias;
+  return trimmed.toLowerCase();
 }
